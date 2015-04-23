@@ -15,6 +15,14 @@ var connect = require('gulp-connect');
 var nib = require('nib');
 var rimraf = require('gulp-rimraf');
 
+gulp.task('connectDist', function () {
+  connect.server({
+    root: 'dist',
+    port: 3000,
+    livereload: true
+  });
+});
+
 // jade task
 gulp.task('jade', function() {
     gulp.src(['./source/**/*.jade', './source/**/_*.jade'])
@@ -41,24 +49,15 @@ gulp.task('stylus', function() {
 // js task
 gulp.task('js', function() {
     gulp.src(['./source/**/*.js', '!./source/**/_*.js'])
-        .pipe(gulp.dest('./public/js'))
+        .pipe(gulp.dest('./dist/'))
         .pipe(connect.reload());
 });
 
-gulp.task('connectDev', function () {
-  connect.server({
-    root: ['dist'],
-    port: 3000,
-    livereload: true
-  });
-});
-
-
 // watch task
 gulp.task('watch', function() {
-    gulp.watch('./source/**/*.styl', ['stylus']);
-    gulp.watch('./source/**/*.jade', ['jade']);
-    gulp.watch('./source/**/*.js', ['js']);
+    gulp.watch(['./source/**/*.styl'], ['stylus']);
+    gulp.watch(['./source/**/*.jade'], ['jade']);
+    gulp.watch(['./source/**/*.js'], ['js']);
 });
 
-gulp.task('default', ['jade', 'stylus', 'js', 'connectDev', 'watch']);
+gulp.task('default', ['connectDist', 'watch', 'jade', 'stylus', 'js']);
