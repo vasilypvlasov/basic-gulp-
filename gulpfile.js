@@ -17,7 +17,7 @@ var rimraf = require('gulp-rimraf');
 
 gulp.task('connectDist', function () {
   connect.server({
-    root: 'dist',
+    root: './dist',
     port: 3000,
     livereload: true
   });
@@ -50,6 +50,8 @@ gulp.task('stylus', function() {
 gulp.task('js', function() {
     gulp.src(['./source/**/*.js', '!./source/**/_*.js'])
         .pipe(gulp.dest('./dist/'))
+        .pipe(jshint())
+        .pipe(jshint.reporter('default', { verbose: true }))
         .pipe(connect.reload());
 });
 
@@ -60,4 +62,4 @@ gulp.task('watch', function() {
     gulp.watch(['./source/**/*.js'], ['js']);
 });
 
-gulp.task('default', ['connectDist', 'watch', 'jade', 'stylus', 'js']);
+gulp.task('default', ['jade', 'stylus', 'js', 'connectDist', 'watch']);
